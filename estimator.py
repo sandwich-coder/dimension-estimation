@@ -15,7 +15,7 @@ class DimensionEstimator:
     def __call__(
             self,
             X: np.ndarray,
-            batch_count = None,
+            batch_count = None,    # The 'None' case may be absorbed into 'batch_count = 1' for more consistent code.
             exact: bool = False,
             fast: bool = False,
             divisions: int = 10
