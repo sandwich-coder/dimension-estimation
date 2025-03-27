@@ -127,7 +127,7 @@ class DimensionEstimator:
 
 
 
-        dimension = np.log(adjacency.mean() + 1, dtype = 'float64') / np.log(3, dtype = 'float64')
+        dimension = np.log(adjacency.mean(axis = 0) + 1, dtype = 'float64') / np.log(3, dtype = 'float64')
         if exact:
             dimension = dimension.tolist()
         else:
