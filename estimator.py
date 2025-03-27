@@ -69,6 +69,7 @@ class DimensionEstimator:
             return dimension
 
 
+        #quantized
         width = max_range / np.float64(divisions)
         if divisions % 2 == 0:
             tile = X / width - np.float64(0.5)
