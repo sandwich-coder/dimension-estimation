@@ -112,8 +112,8 @@ class DimensionEstimator:
 
         else:
 
-            compared = tile.reshape([tile.shape[0], 1, tile.shape[1]]).copy()
-            compared = compared.repeat(tile.shape[0], axis = 1)
+            _ = tile.reshape([tile.shape[0], 1, tile.shape[1]])
+            compared = _.repeat(tile.shape[0], axis = 1)
 
             all_ = compared.swapaxes(0, 1).copy()
 
