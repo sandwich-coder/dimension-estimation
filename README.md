@@ -7,7 +7,7 @@ This is a high-dimensional extension of the previous work 'CubeDimAE'. The probl
 
 There were some revisions to the method. First, the iterative scanning has been eliminated as it seemed redundant. It became a parameter 'divisions' instead, with the default 10. Second, the weighted averaging of adjacencies has been replaced by simple mean, on the basis that the sparsity of high-dimensional datasets makes the density meaningless.
 
-There is much room for improvement. It involves a computation within a symmetric array, which by definition half the computation is useless. Devising a way of computing only half without being affected by instantiation and indexing overhead.
+There is much room for improvement. It involves a computation within a symmetric array, which by definition half the computation is useless. Devising a way of reducing without being affected by instantiation and indexing overhead.
 
 
 ## Sample Usage
