@@ -16,4 +16,9 @@ There is much room for improvement. It involves a computation of two symmetric a
 import numpy as np
 from sklearn.datasets import make_swiss_roll
 from estimator import DimensionEstimator
+
+data = make_swiss_roll(n_samples = 1000)[0]
+estimator = DimensionEstimator()
+
+dimension = estimator(data)
 ```
