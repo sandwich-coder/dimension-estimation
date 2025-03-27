@@ -71,10 +71,10 @@ class DimensionEstimator:
 
         #quantized
         width = max_range / np.float64(divisions)
-        if divisions % 2 == 0:
-            tile = X / width - np.float64(0.5)
-        else:
+        if divisions % 2 != 0:
             tile = X / width
+        else:
+            tile = X / width - np.float64(0.5)
         tile = tile.round().astype(tile_dtype)
         tile = np.unique(tile, axis = 0)
 
