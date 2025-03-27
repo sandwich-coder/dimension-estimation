@@ -8,3 +8,12 @@ This is a high-dimensional extension of the previous work 'CubeDimAE'. The probl
 There were some revisions to the method. First, the iterative scanning has been eliminated as it seemed redundant. It became a parameter 'divisions' instead, with the default 10. Second, the weighted averaging of adjacencies has been replaced by simple mean, on the basis that the sparsity of high-dimensional datasets makes the density meaningless.
 
 There is much room for improvement. It involves a computation of two symmetric arrays, which by definition half the computation is useless. Devising a way of computing only the half without being affected by instantiation and indexing overhead.
+
+
+## Sample Usage
+
+```python
+import numpy as np
+from sklearn.datasets import make_swiss_roll
+from estimator import DimensionEstimator
+```
