@@ -7,4 +7,4 @@ This is a high-dimensional extension of the previous work 'CubeDimAE'. The probl
 
 Also the iterative scanning, where multiple grid widths are tested, is eliminated as redundant. Current way of determining the width is very sensitive to outliers, so quantile-based scaling is being considered.
 
-In terms of optimization, there is much room for improvement. It involves a computation of two symmetric arrays, which by definition half the computation is redundant and working to halve the computation.
+In terms of optimization, there is much room for improvement. It involves a computation of two symmetric arrays, which by definition half the computation is redundant. Devising a way of computing only the half without being affected by instantiation and indexing overhead.
