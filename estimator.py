@@ -35,7 +35,7 @@ class DimensionEstimator:
             raise ValueError('\'divisions\' greater than 10000 is not supported.')
         if fast:
             retained_variance = 0.9
-            logging.warning('The dataset is truncated at 90% total variance for faster estimation. It may overtruncate for those of few features.')
+            logging.warning('The dataset is truncated at 90% total variance for faster computation. It may overtruncate for those of few features.')
         else:
             retained_variance = None
         if divisions < 50:
