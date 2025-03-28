@@ -84,7 +84,7 @@ class DimensionEstimator:
         # - counted -
 
         batch = copy(np.array_split(tile, batch_count, axis = 0))
-        if batch_count > tile.shape[0]:    # Needs a fix.
+        if batch_count > tile.shape[0]:    # ___ Need be fixed.
             effective_length = tile.shape[0] % batch_count
             batch = batch[:effective_length]
 
