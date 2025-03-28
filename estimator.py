@@ -14,21 +14,18 @@ class DimensionEstimator:
 
     def __call__(
             self,
-            X: np.ndarray,
-            batch_count = None,    # The 'None' case may be absorbed into 'batch_count = 1' for more consistent code.
-            exact: bool = False,
-            fast: bool = False,
-            divisions: int = 10
+            X:np.ndarray,
+            batch_count:int = 1000,
+            exact:bool = False,
+            fast:bool = False,
+            divisions:int = 10
             ):
         if X.dtype != np.float64:
             X = X.astype('float64')
         if X.ndim != 2:
             raise ValueError('The shape must be the dataset standard.')
-        if batch_count is not None:
-            if not isinstance(batch_count, int):
-                raise TypeError('\'batch_count\' should be an integer.')
-            if batch_count < 1:
-                raise ValueError('\'batch_count\' must be positive.')
+        if batch_count < 1:
+            raise ValueError('\'batch_count\' must be positive.')
         if divisions < 2:
             raise ValueError('\'divisions\' must be greater than 1.')
         if divisions > 10000:
@@ -48,12 +45,6 @@ class DimensionEstimator:
         pca.fit(X)
         X = pca.transform(X)
 
-        #measured
-        max_range = np.max(
-                X.max(axis = 0) - X.min(axis = 0),
-                axis = 0
-                )
-
         # A tile is always adjacent to all the others in the case of two divisions.
         if divisions == 2:
             binary = np.where(X >= 0, 1, -1)
@@ -70,6 +61,7 @@ class DimensionEstimator:
 
 
         #quantized
+        max_range = np.max(X.max(axis = 0) - X.min(axis = 0), axis = 0)
         width = max_range / np.float64(divisions)
         if divisions % 2 != 0:
             tile = X / width
@@ -81,41 +73,20 @@ class DimensionEstimator:
 
         # - counted -
 
-        if batch_count is not None:
+        batch = copy(np.array_split(tile, batch_count, axis = 0))
+        if batch_count > tile.shape[0]:
+            effective_length = tile.shape[0] % batch_count
+            batch = batch[:effective_length]
 
-            batch = copy(np.array_split(tile, batch_count, axis = 0))
-            if batch_count > tile.shape[0]:
-                effective_length = tile.shape[0] % batch_count
-                batch = batch[:effective_length]
+        adjacency = []
+        for lll in tqdm(batch, colour = 'magenta'):
 
-            adjacency = []
-            for llll in tqdm(batch, colour = 'magenta'):
-
-                _ = llll.reshape([llll.shape[0], 1, llll.shape[1]])
-                compared = _.repeat(tile.shape[0], axis = 1)
-
-                _ = tile.reshape([tile.shape[0], 1, tile.shape[1]])
-                _ = _.swapaxes(0, 1)
-                all_ = _.repeat(compared.shape[0], axis = 0)
-
-                distance = np.max(
-                        np.absolute(compared - all_),
-                        axis = 2
-                        )
-                is_adjacent = distance == 1
-
-                adjacency_batch = is_adjacent.astype('int64')
-                adjacency_batch = adjacency_batch.sum(axis = 1, dtype = 'int64')
-                adjacency.append(adjacency_batch)
-
-            adjacency = np.concatenate(adjacency, axis = 0)
-
-        else:
-
-            _ = tile.reshape([tile.shape[0], 1, tile.shape[1]])
+            _ = lll.reshape([lll.shape[0], 1, lll.shape[1]])
             compared = _.repeat(tile.shape[0], axis = 1)
 
-            all_ = compared.swapaxes(0, 1).copy()
+            _ = tile.reshape([tile.shape[0], 1, tile.shape[1]])
+            _ = _.swapaxes(0, 1)
+            all_ = _.repeat(compared.shape[0], axis = 0)
 
             distance = np.max(
                     np.absolute(compared - all_),
@@ -123,8 +94,11 @@ class DimensionEstimator:
                     )
             is_adjacent = distance == 1
 
-            adjacency = is_adjacent.astype('int64').sum(axis = 1, dtype = 'int64')
+            adjacency_batch = is_adjacent.astype('int64')
+            adjacency_batch = adjacency_batch.sum(axis = 1, dtype = 'int64')
+            adjacency.append(adjacency_batch)
 
+        adjacency = np.concatenate(adjacency, axis = 0)
 
 
         dimension = np.log(adjacency.mean(axis = 0) + 1, dtype = 'float64') / np.log(3, dtype = 'float64')
