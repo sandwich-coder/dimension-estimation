@@ -19,7 +19,7 @@ Ubuntu-24.04
 git clone https://github.com/sandwich-coder/dimension-estimation
 cd dimension-estimation
 pip install --upgrade pip
-pip install --upgrade -r requirements.txt
+pip install --upgrade --requirement requirement.txt
 ```
 
 #### Example Usage
