@@ -45,10 +45,10 @@ class DimensionEstimator:
             logging.warning('The dataset is truncated at 90% total variance for faster computation. It may overtruncate for those of few features.')
         else:
             retained_variance = None
-        if divisions < 50:
-            tile_dtype = np.int8
-        else:
+        if divisions >= 50:
             tile_dtype = np.int16
+        else:
+            tile_dtype = np.int8
 
         #oriented
         pca = PCA(n_components = retained_variance, svd_solver = 'full')
