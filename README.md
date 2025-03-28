@@ -24,9 +24,10 @@ pip install --upgrade -r requirements.txt
 
 #### Example Usage
 ```python
+from estimator import DimensionEstimator
+
 import numpy as np
 from sklearn.datasets import make_swiss_roll
-from estimator import DimensionEstimator
 
 data = make_swiss_roll(n_samples = 1000)[0]
 estimator = DimensionEstimator()
