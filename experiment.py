@@ -13,7 +13,7 @@ from torchvision import datasets as images
 from torchvision.transforms import ToTensor
 
 
-#load
+# - load -
 
 digits = images.MNIST(
         root = 'datasets',
@@ -35,7 +35,7 @@ cloths = cloths.reshape([cloths.shape[0], -1])
 data = cloths.copy()
 
 
-#processed
+# - processed -
 
 data = data.astype('float64')
 
