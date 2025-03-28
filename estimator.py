@@ -85,7 +85,7 @@ class DimensionEstimator:
 
         batch = copy(np.array_split(tile, batch_count, axis = 0))
         if batch_count > tile.shape[0]:
-            effective_length = tile.shape[0] % batch_count
+            effective_length = tile.shape[0] % batch_count    # Needs a fix.
             batch = batch[:effective_length]
 
         adjacency = []
