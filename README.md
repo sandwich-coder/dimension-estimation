@@ -12,6 +12,14 @@ There is much room for improvement. It involves a computation within a symmetric
 
 ## Example Usage
 
+#### terminal(WSL)
+```
+git clone https://github.com/sandwich-coder/dimension-estimation
+cd dimension-estimation
+pip install --upgrade -r requirements.txt
+```
+
+#### Example Usage
 ```python
 import numpy as np
 from sklearn.datasets import make_swiss_roll
