@@ -28,7 +28,7 @@ class DimensionEstimator:
             if not isinstance(batch_count, int):
                 raise TypeError('\'batch_count\' should be an integer.')
             if batch_count < 1:
-                raise ValueError('\'batch_count\' must be greater than 1.')
+                raise ValueError('\'batch_count\' must be positive.')
         if divisions < 2:
             raise ValueError('\'divisions\' must be greater than 1.')
         if divisions > 10000:
