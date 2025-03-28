@@ -14,18 +14,28 @@ class DimensionEstimator:
 
     def __call__(
             self,
-            X:np.ndarray,
-            batch_count:int = 1000,
-            exact:bool = False,
-            fast:bool = False,
-            divisions:int = 10
+            X,
+            batch_count = 1000,
+            exact = False,
+            fast = False,
+            divisions = 10
             ):
+        if type(X) != np.ndarray:
+            raise TypeError('The input must be a \'numpy.ndarray\'.')
         if X.dtype != np.float64:
             X = X.astype('float64')
         if X.ndim != 2:
             raise ValueError('The shape must be the dataset standard.')
+        if not isinstance(batch_count, int):
+            raise TypeError('\'batch_count\' should be an integer.')
         if batch_count < 1:
             raise ValueError('\'batch_count\' must be positive.')
+        if not isinstance(exact, bool):
+            raise TypeError('\'exact\' should be boolean.')
+        if not isinstance(fast, bool):
+            raise TypeError('\'fast\' should be boolean.')
+        if not isinstance(divisions, int):
+            raise TypeError('\'divisions\' should be an integer.')
         if divisions < 2:
             raise ValueError('\'divisions\' must be greater than 1.')
         if divisions > 10000:
