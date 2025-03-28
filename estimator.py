@@ -71,7 +71,7 @@ class DimensionEstimator:
 
 
         #quantized
-        max_range = np.max(X.max(axis = 0) - X.min(axis = 0), axis = 0)    # ___ Various alternatives are being considered to resolve the outlier issue.
+        max_range = np.max(X.max(axis = 0) - X.min(axis = 0), axis = 0)    ## Various alternatives are being considered to resolve the outlier issue.
         width = max_range / np.float64(divisions)
         if divisions % 2 != 0:
             tile = X / width
@@ -84,7 +84,7 @@ class DimensionEstimator:
         # - counted -
 
         batch = copy(np.array_split(tile, batch_count, axis = 0))
-        if batch_count > tile.shape[0]:    # ___ Need be fixed.
+        if batch_count > tile.shape[0]:    ## Need be fixed.
             effective_length = tile.shape[0] % batch_count
             batch = batch[:effective_length]
 
