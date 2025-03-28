@@ -31,16 +31,25 @@ cloths = images.FashionMNIST(
         ).data.numpy()
 cloths = cloths.reshape([cloths.shape[0], -1])
 
-cifar = images.CIFAR10(
+cifar10 = images.CIFAR10(
         root = 'datasets',
         train = True,
         download = True,
         transform = ToTensor()
         ).data
-cifar = cifar.reshape([cifar.shape[0], -1])
+cifar10 = cifar10.reshape([cifar10.shape[0], -1])
+
+cifar100 = images.CIFAR100(
+        root = 'datasets',
+        train = True,
+        download = True,
+        transform = ToTensor()
+        ).data
+cifar100 = cifar100.reshape([cifar100.shape[0], -1])
+
 
 #select
-data = cifar.copy()
+data = digits.copy()
 
 
 # - processed -
@@ -53,3 +62,5 @@ data = scaler.transform(data)
 
 
 estimator = DimensionEstimator()
+dimension = estimator(data, exact = True, truncate = True)
+print('dimension: {}'.format(dimension))

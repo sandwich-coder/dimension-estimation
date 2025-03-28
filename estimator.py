@@ -17,7 +17,7 @@ class DimensionEstimator:
             X,
             batch_count = 1000,
             exact = False,
-            fast = False,
+            truncate = False,
             divisions = 10
             ):
         if type(X) != np.ndarray:
@@ -32,15 +32,15 @@ class DimensionEstimator:
             raise ValueError('\'batch_count\' must be positive.')
         if not isinstance(exact, bool):
             raise TypeError('\'exact\' should be boolean.')
-        if not isinstance(fast, bool):
-            raise TypeError('\'fast\' should be boolean.')
+        if not isinstance(truncate, bool):
+            raise TypeError('\'truncate\' should be boolean.')
         if not isinstance(divisions, int):
             raise TypeError('\'divisions\' should be an integer.')
         if divisions < 2:
             raise ValueError('\'divisions\' must be greater than 1.')
         if divisions > 10000:
             raise ValueError('\'divisions\' greater than 10000 is not supported.')
-        if fast:
+        if truncate:
             retained_variance = 0.9
             logging.warning('The dataset is truncated at 90% total variance for faster computation. It may overtruncate for those of few features.')
         else:
