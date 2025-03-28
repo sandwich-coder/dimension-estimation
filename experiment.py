@@ -31,8 +31,16 @@ cloths = images.FashionMNIST(
         ).data.numpy()
 cloths = cloths.reshape([cloths.shape[0], -1])
 
+cifar = images.CIFAR10(
+        root = 'datasets',
+        train = True,
+        download = True,
+        transform = ToTensor()
+        ).data
+cifar = cifar.reshape([cifar.shape[0], -1])
+
 #select
-data = cloths.copy()
+data = cifar.copy()
 
 
 # - processed -
