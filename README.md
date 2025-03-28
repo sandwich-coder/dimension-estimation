@@ -14,8 +14,15 @@ There is much room for improvement. It involves a computation within a symmetric
 #### tested environments
 Ubuntu-24.04
 
+#### terminal (install WSL)
+```
+wsl --install Ubuntu-24.04
+```
+
 #### terminal(WSL)
 ```
+sudo apt update
+sudo apt install python3-venv python3-pip python3-tk
 git clone https://github.com/sandwich-coder/dimension-estimation
 cd dimension-estimation
 pip install --upgrade pip
