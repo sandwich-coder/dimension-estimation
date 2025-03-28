@@ -10,7 +10,7 @@ There were some revisions. First, the iterative scanning has been eliminated as 
 There is much room for improvement. It involves a computation within a symmetric array, which by definition half the computation is useless. Devising a way of reducing without being affected by instantiation and indexing overhead.
 
 
-## Example Usage
+## Use
 
 #### terminal(WSL)
 ```
