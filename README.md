@@ -18,10 +18,6 @@ Ubuntu-24.04
 ```
 wsl --install Ubuntu-24.04
 ```
-```
-sudo apt update
-sudo apt install python3-venv python3-pip python3-tk
-```
 
 #### WSL
 ```
