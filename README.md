@@ -17,14 +17,17 @@ Ubuntu-24.04
 #### terminal (from scratch)
 ```
 wsl --install Ubuntu-24.04
-wsl
 ```
 ```
 sudo apt update
 sudo apt install python3-venv python3-pip python3-tk
 ```
 
-#### terminal(WSL)
+#### WSL
+```
+sudo apt update
+sudo apt install python3-venv python3-pip python3-tk
+```
 ```
 git clone https://github.com/sandwich-coder/dimension-estimation
 cd dimension-estimation
