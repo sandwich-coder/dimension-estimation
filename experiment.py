@@ -47,7 +47,6 @@ cifar100 = images.CIFAR100(
         ).data
 cifar100 = cifar100.reshape([cifar100.shape[0], -1])
 
-
 #select
 data = digits.copy()
 
