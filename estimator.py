@@ -71,8 +71,8 @@ class DimensionEstimator:
 
 
         #quantized
-        max_range = np.max(X.max(axis = 0) - X.min(axis = 0), axis = 0)    ## Various alternatives are being considered to resolve the outlier issue.
-        width = max_range / np.float64(divisions)
+        range_ = np.quantile(X[:, 0], 0.99, axis = 0) - np.quantile(X[:, 0], 0.01, axis = 0)    ## Various alternatives are being considered to resolve the outlier issue.
+        width = range_ / np.float64(divisions)
         if divisions % 2 != 0:
             tile = X / width
         else:
