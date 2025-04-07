@@ -84,9 +84,8 @@ class DimensionEstimator:
         # - counted -
 
         batch = copy(np.array_split(tile, batch_count, axis = 0))
-        if batch_count > tile.shape[0]:    ## Need be fixed.
-            effective_length = tile.shape[0] % batch_count
-            batch = batch[:effective_length]
+        if batch_count > tile.shape[0]:
+            batch = batch[:tile.shape[0]]
 
         adjacency = []
         for lll in tqdm(batch, colour = 'magenta'):
