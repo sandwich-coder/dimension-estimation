@@ -9,7 +9,7 @@ There were some revisions. First, the iterative scanning has been eliminated as 
 
 There is much room for improvement. It involves a computation within a symmetric array, where by definition half the computation is useless. Devising a way of reducing without being affected by instantiation and indexing overhead.
 
-Aside from the computation redundancies, this algorithm relies on classical statistics which believes real-world datasets generally behave as what the central limit theorem says. However, albeit having been very successful, so many exceptions are encountered that "robust statistics", a major field of modern statistics, has emerged.
+Aside from the computation redundancies, this algorithm relies on classical statistics which believes real-world datasets generally behave as what the central limit theorem says. However, albeit having been very successful, so many exceptions are encountered that "robust statistics", a major field of modern statistics, has emerged. To handle those exceptions and become a more reliable method of dimension estimation, many parts should switch from mean-variance to the median-mad paradigm.
 
 
 ## Use
