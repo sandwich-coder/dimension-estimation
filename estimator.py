@@ -110,7 +110,7 @@ class DimensionEstimator:
         adjacency = np.concatenate(adjacency, axis = 0)
 
 
-        dimension = np.log(adjacency.mean(axis = 0) + 1, dtype = 'float64') / np.log(3, dtype = 'float64')    ## What if median instead of mean?
+        dimension = np.log(adjacency.mean(axis = 0) + 1, dtype = 'float64') / np.log(3, dtype = 'float64')
         if exact:
             dimension = dimension.tolist()
         else:
