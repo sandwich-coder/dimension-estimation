@@ -58,7 +58,7 @@ data = digits.copy()
 
 data = data.astype('float64')
 
-scaler = MinMaxScaler(feature_range = (-1, 1))
+scaler = MinMaxScaler(feature_range = (-1, 1))    # 'MinMaxScaler' scales features individually.
 scaler.fit(data)
 data = scaler.transform(data)
 
