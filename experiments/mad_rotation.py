@@ -6,6 +6,7 @@ import numpy as np
 from scipy.fft import fftn as ft, ifftn as ift, fftfreq, fftshift
 from scipy.spatial.distance import pdist, cdist
 from scipy.optimize import minimize
+from scipy.stats import median_abs_deviation as mad
 import matplotlib as mpl
 from matplotlib import pyplot as pp
 
@@ -15,6 +16,8 @@ from sklearn.preprocessing import MinMaxScaler
 from tqdm import tqdm
 
 
+# Spatial median is set as the center of rotation.
+# There is a well-known algorithm dedicated for computing spatial median, but the 'minimize' is used for quick experimentation.
 def median(X):
     if type(X) != np.ndarray:
         raise TypeError('Input must be a \'numpy.ndarray\'.')
