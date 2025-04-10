@@ -8,12 +8,11 @@ from scipy.fft import fftn as ft, ifftn as ift, fftfreq, fftshift
 from scipy.spatial.distance import pdist, cdist
 import torch
 
-from estimator import DimensionEstimator
-
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import MinMaxScaler
 from torchvision import datasets as images
 from torchvision.transforms import ToTensor
+from estimator import DimensionEstimator
 
 
 # - load -
