@@ -3,6 +3,7 @@ import os, sys
 import types
 import logging
 import numpy as np
+from scipy import linalg as la
 from scipy.fft import fftn as ft, ifftn as ift, fftfreq, fftshift
 from scipy.spatial.distance import pdist, cdist
 from scipy.optimize import minimize
