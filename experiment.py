@@ -3,6 +3,8 @@ import os, sys
 import types
 import logging
 import numpy as np
+import matplotlib as mpl
+from matplotlib import pyplot as pp
 from scipy import linalg as la
 from scipy.fft import fftn as ft, ifftn as ift, fftfreq, fftshift
 from scipy.spatial.distance import pdist, cdist
