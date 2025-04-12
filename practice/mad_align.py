@@ -62,6 +62,7 @@ class BareEstimator:
     def __call__(
             self,
             X,
+            scale,
             batch_count = 1000,
             exact = False,
             divisions = 10
@@ -72,6 +73,10 @@ class BareEstimator:
             X = X.astype('float64')
         if X.ndim != 2:
             raise ValueError('The shape must be the dataset standard.')
+        if not isinstance(scale, (int, float)):
+            raise TypeError('The scale should be an integer or float.')
+        if scale <= 0:
+            raise ValueError('The scale must be positive.')
         if not isinstance(batch_count, int):
             raise TypeError('\'batch_count\' should be an integer.')
         if batch_count < 1:
@@ -84,10 +89,7 @@ class BareEstimator:
             raise ValueError('\'divisions\' must be greater than 1.')
         if divisions > 10000:
             raise ValueError('\'divisions\' greater than 10000 is not supported.')
-        if divisions >= 50:
-            tile_dtype = np.int16
-        else:
-            tile_dtype = np.int8
+        tile_dtype = np.int64
 
         # A tile is always adjacent to all the others in the case of two divisions.
         if divisions == 2:
@@ -105,8 +107,7 @@ class BareEstimator:
 
 
         #quantized
-        range_ = np.max(X.max(axis = 0) - X.min(axis = 0), axis = 0)
-        width = range_ / np.float64(divisions)
+        width = np.float64(scale / divisions)
         if divisions % 2 != 0:
             tile = X / width
         else:
@@ -292,9 +293,22 @@ eig = np.flip(eig, axis = 0)
 eigmat = np.flip(eigmat, axis = 1)
 mad_aligned = data @ eigmat
 
-estimator = BareEstimator()
-dimension_std = estimator(std_aligned, exact = True)
-dimension_mad = estimator(mad_aligned, exact = True)
 
-print('std-aligned: {}'.format(dimension_std))
-print('MAD-aligned: {}'.format(dimension_mad))
+# - analysis -
+
+#minmax
+std_minmax = std_aligned.max(axis = 0) - std_aligned.min(axis = 0)
+mad_minmax = mad_aligned.max(axis = 0) - mad_aligned.min(axis = 0)
+
+#std
+std_std = std_aligned.std(axis = 0)
+mad_std = mad_aligned.std(axis = 0)
+
+#mad
+std_mad = mad(std_aligned, axis = 0)
+mad_mad = mad(mad_aligned, axis = 0)
+
+
+# - estimation -
+
+estimator = BareEstimator()
