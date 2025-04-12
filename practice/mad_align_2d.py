@@ -124,4 +124,3 @@ plot_2 = ax_2.plot(
 
 
 ax_1.legend()
-pp.show()
