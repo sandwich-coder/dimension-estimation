@@ -36,3 +36,30 @@ def median(X):
     result = minimize(_distance_sum, initial, method = 'Nelder-Mead')
 
     return result.x
+
+
+def dispersion(X):
+    if type(X) != np.ndarray:
+        raise TypeError('Input must be a \'numpy.ndarray\'.')
+    if X.dtype != np.float64:
+        X = X.astype('float64')
+    if X.ndim != 2:
+        raise ValueError('The shape is not the dataset standard.')
+
+    #centered
+    X = X - median(X)
+
+    def _func(row1, row2):
+        return np.median(row1 * row2, axis = 0)
+
+    spread = cdist(X.transpose(), X.transpose(), metric = _func)
+    return spread
+
+
+
+data = np.stack([
+    np.arange(10, dtype = 'float64'), np.arange(10, dtype = 'float64')
+    ], axis = 1)
+
+outlier = np.array([[11, -100]], dtype = 'float64')
+data = np.concatenate([data, outlier], axis = 0)
