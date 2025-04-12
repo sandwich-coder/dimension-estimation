@@ -57,9 +57,71 @@ def dispersion(X):
 
 
 
+# - test -
+
+#points
 data = np.stack([
     np.arange(10, dtype = 'float64'), np.arange(10, dtype = 'float64')
     ], axis = 1)
-
-outlier = np.array([[11, -100]], dtype = 'float64')
+outlier = np.array([
+    [10, -100],
+    [6, 100]
+    ], dtype = 'float64')
 data = np.concatenate([data, outlier], axis = 0)
+
+#median
+med = median(data)
+
+spread = dispersion(data)
+eig, eigmat = la.eigh(spread)
+eig, eigmat = np.flip(eig), np.flip(eigmat)
+rotated = data @ eigmat
+
+
+# - plot -
+
+fig = pp.figure(layout = 'constrained', figsize = (11, 5))
+fig.suptitle('comparison')
+gs = fig.add_gridspec(nrows = 1, ncols = 2, hspace = 0.2)
+
+ax_1 = fig.add_subplot(gs[0])
+ax_1.set_title('original')
+ax_1.set_xlabel('x')
+ax_1.set_ylabel('y')
+ax_1.set_box_aspect(1)
+ax_1.set_aspect('equal')
+pp.setp(ax_1.get_xticklabels(), rotation = 30, ha = 'right', rotation_mode = 'anchor')
+pp.setp(ax_1.get_yticklabels(), rotation = 60, ha = 'right', rotation_mode = 'anchor')
+plot_1_1 = ax_1.plot(
+        data[:, 0], data[:, 1],
+        marker = '.', markersize = 1,
+        linestyle = '',
+        color = 'blue',
+        label = 'data'
+        )
+plot_1_2 = ax_1.plot(
+        med[0], med[1],
+        marker = '+', markersize = 5,
+        linestyle = '',
+        color = 'red',
+        label = 'median \n(rotation point)'
+        )
+
+ax_2 = fig.add_subplot(gs[1])
+ax_2.set_title('aligned')
+ax_2.set_xlabel('x\'')
+ax_2.set_ylabel('y\'')
+ax_2.set_box_aspect(1)
+ax_2.set_aspect('equal')
+pp.setp(ax_2.get_xticklabels(), rotation = 30, ha = 'right', rotation_mode = 'anchor')
+pp.setp(ax_2.get_yticklabels(), rotation = 60, ha = 'right', rotation_mode = 'anchor')
+plot_2 = ax_2.plot(
+        rotated[:, 0], rotated[:, 1],
+        marker = '.', markersize = 1,
+        linestyle = '',
+        color = 'green'
+        )
+
+
+ax_1.legend()
+pp.show()
