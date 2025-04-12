@@ -254,7 +254,7 @@ orderless = [
         'attack_name'
         ]
 df.drop(orderless, axis = 'columns', inplace = True)
-data = df.to_numpy(dtype = 'float64')
+data = df.to_numpy(dtype = 'float64', copy = True)
 
 if SAMPLE:
     index = np.arange(data.shape[0])
@@ -297,7 +297,8 @@ mad_mad = mad(mad_aligned, axis = 0)
 estimator = BareEstimator()
 width = 10000
 
-# How could the alignment with respect to standard deviation more stable than median absolute deviation?
+# How can the alignment with respect to standard deviation more stable than median absolute deviation?
+# The dispersion matrix not being positive-semidefinite seems somewhat related to this problem.
 std_dim = estimator(std_aligned, width, exact = True)
 mad_dim = estimator(mad_aligned, width, exact = True)
 
