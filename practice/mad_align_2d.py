@@ -17,7 +17,7 @@ from sklearn.preprocessing import MinMaxScaler
 from tqdm import tqdm
 
 
-# Spatial median is set as the center of rotation.
+# Spatial median is set as the point of rotation.
 # There is a well-known algorithm dedicated for computing spatial median, but the 'minimize' is used for quick experimentation.
 def median(X):
     if type(X) != np.ndarray:
