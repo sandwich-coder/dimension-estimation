@@ -78,8 +78,6 @@ class BareEstimator:
             raise ValueError('\'batch_count\' must be positive.')
         if not isinstance(exact, bool):
             raise TypeError('\'exact\' should be boolean.')
-        if not isinstance(truncate, bool):
-            raise TypeError('\'truncate\' should be boolean.')
         if not isinstance(divisions, int):
             raise TypeError('\'divisions\' should be an integer.')
         if divisions < 2:
@@ -158,7 +156,7 @@ class BareEstimator:
 
 
 
-# -- test --
+' ========== test ========== '
 
 
 #sample points
@@ -166,25 +164,31 @@ data = np.stack([
     np.arange(10, dtype = 'float64'), np.arange(10, dtype = 'float64')
     ], axis = 1)
 outlier = np.array([
-    [10, -100],
-    [6, 100]
+    [10, -100]
     ], dtype = 'float64')
 data = np.concatenate([data, outlier], axis = 0)
 
-#median
+#centers
+mean = data.mean(axis = 0, dtype = 'float64')
 med = median(data)
 
+#std-rotation
+pca = PCA(svd_solver = 'full')
+pca.fit(data)
+std_rotated = pca.transform(data)
+
+#MAD-rotation
 spread = dispersion(data)
 eig, eigmat = la.eigh(spread)
 eig, eigmat = np.flip(eig), np.flip(eigmat)
-rotated = data @ eigmat
+mad_rotated = data @ eigmat
 
 
 # - plot -
 
-fig = pp.figure(layout = 'constrained', figsize = (11, 5))
+fig = pp.figure(layout = 'constrained', figsize = (17, 5))
 fig.suptitle('comparison')
-gs = fig.add_gridspec(nrows = 1, ncols = 2, hspace = 0.2)
+gs = fig.add_gridspec(nrows = 1, ncols = 3, hspace = 0.2)
 
 ax_1 = fig.add_subplot(gs[0])
 ax_1.set_title('original')
@@ -202,15 +206,23 @@ plot_1_1 = ax_1.plot(
         label = 'data'
         )
 plot_1_2 = ax_1.plot(
+        mean[0], mean[1],
+        marker = 'x', markersize = 6,
+        linestyle = '',
+        color = 'grey',
+        label = 'mean'
+        )
+plot_1_3 = ax_1.plot(
         med[0], med[1],
-        marker = '+', markersize = 5,
+        marker = '+', markersize = 6,
         linestyle = '',
         color = 'red',
-        label = 'median \n(rotation point)'
+        label = 'median'
         )
+ax_1.legend()
 
 ax_2 = fig.add_subplot(gs[1])
-ax_2.set_title('aligned')
+ax_2.set_title('std-aligned')
 ax_2.set_xlabel('x\'')
 ax_2.set_ylabel('y\'')
 ax_2.set_box_aspect(1)
@@ -218,17 +230,35 @@ ax_2.set_aspect('equal')
 pp.setp(ax_2.get_xticklabels(), rotation = 30, ha = 'right', rotation_mode = 'anchor')
 pp.setp(ax_2.get_yticklabels(), rotation = 60, ha = 'right', rotation_mode = 'anchor')
 plot_2 = ax_2.plot(
-        rotated[:, 0], rotated[:, 1],
+        std_rotated[:, 0], std_rotated[:, 1],
         marker = '.', markersize = 1,
         linestyle = '',
-        color = 'green'
+        color = 'grey'
         )
 
-ax_1.legend()
+ax_3 = fig.add_subplot(gs[2])
+ax_3.set_title('MAD-aligned')
+ax_3.set_xlabel('x\'')
+ax_3.set_ylabel('y\'')
+ax_3.set_box_aspect(1)
+ax_3.set_aspect('equal')
+pp.setp(ax_3.get_xticklabels(), rotation = 30, ha = 'right', rotation_mode = 'anchor')
+pp.setp(ax_3.get_yticklabels(), rotation = 60, ha = 'right', rotation_mode = 'anchor')
+plot_3 = ax_3.plot(
+        mad_rotated[:, 0], mad_rotated[:, 1],
+        marker = '.', markersize = 1,
+        linestyle = '',
+        color = 'red'
+        )
+
+pp.show()
 
 
 
-# - mirai dataset -
+' ========== mirai dataset ========== '
+
+
+# - load -
 
 df = pd.read_csv('../datasets/mirai.csv')
 df = df[df['attack_flag'] == 0]
@@ -246,3 +276,25 @@ orderless = [
         ]
 df.drop(orderless, axis = 'columns', inplace = True)
 data = df.to_numpy(dtype = 'float64')
+
+
+# - aligned -
+
+#standard deviation
+pca = PCA(svd_solver = 'full')
+pca.fit(data)
+std_aligned = pca.transform(data)
+
+#median absolute deviation
+spread = dispersion(data)
+eig, eigmat = la.eigh(spread)
+eig = np.flip(eig, axis = 0)
+eigmat = np.flip(eigmat, axis = 1)
+mad_aligned = data @ eigmat
+
+estimator = BareEstimator()
+dimension_std = estimator(std_aligned, exact = True)
+dimension_mad = estimator(mad_aligned, exact = True)
+
+print('std-aligned: {}'.format(dimension_std))
+print('MAD-aligned: {}'.format(dimension_mad))
