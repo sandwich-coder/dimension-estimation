@@ -62,57 +62,31 @@ class BareEstimator:
     def __call__(
             self,
             X,
-            scale,
+            width,
             batch_count = 1000,
-            exact = False,
-            divisions = 10
+            exact = False
             ):
         if type(X) != np.ndarray:
-            raise TypeError('The input must be a \'numpy.ndarray\'.')
+            raise TypeError('Input must be a \'numpy.ndarray\'.')
         if X.dtype != np.float64:
             X = X.astype('float64')
         if X.ndim != 2:
             raise ValueError('The shape must be the dataset standard.')
-        if not isinstance(scale, (int, float)):
-            raise TypeError('The scale should be an integer or float.')
-        if scale <= 0:
-            raise ValueError('The scale must be positive.')
+        if not isinstance(width, (int, float)):
+            raise TypeError('Tile width should be an integer or float.')
+        if width <= 0:
+            raise ValueError('Tile width must be positive.')
         if not isinstance(batch_count, int):
             raise TypeError('\'batch_count\' should be an integer.')
         if batch_count < 1:
             raise ValueError('\'batch_count\' must be positive.')
         if not isinstance(exact, bool):
             raise TypeError('\'exact\' should be boolean.')
-        if not isinstance(divisions, int):
-            raise TypeError('\'divisions\' should be an integer.')
-        if divisions < 2:
-            raise ValueError('\'divisions\' must be greater than 1.')
-        if divisions > 10000:
-            raise ValueError('\'divisions\' greater than 10000 is not supported.')
-        tile_dtype = np.int64
-
-        # A tile is always adjacent to all the others in the case of two divisions.
-        if divisions == 2:
-            binary = np.where(X >= 0, 1, -1)
-            binary = binary.astype('int8')
-
-            occupied = np.unique(binary, axis = 0)
-            dimension = np.log(occupied.shape[0], dtype = 'float64') / np.log(2, dtype = 'float64')
-            if exact:
-                dimension = dimension.tolist()
-            else:
-                dimension = dimension.round().astype('int64')
-                dimension = dimension.tolist()
-            return dimension
 
 
         #quantized
-        width = np.float64(scale / divisions)
-        if divisions % 2 != 0:
-            tile = X / width
-        else:
-            tile = X / width - np.float64(0.5)
-        tile = tile.round().astype(tile_dtype)
+        tile = X / width - np.float64(0.5)
+        tile = tile.round().astype('int64')
         tile = np.unique(tile, axis = 0)
 
 
@@ -145,7 +119,7 @@ class BareEstimator:
         adjacency = np.concatenate(adjacency, axis = 0)
 
 
-        dimension = np.log(adjacency.mean(axis = 0) + 1, dtype = 'float64') / np.log(3, dtype = 'float64')
+        dimension = np.log(np.median(adjacency, axis = 0) + 1, dtype = 'float64') / np.log(3, dtype = 'float64')
         if exact:
             dimension = dimension.tolist()
         else:
@@ -157,7 +131,7 @@ class BareEstimator:
 
 
 
-' ========== test ========== '
+' ========== test ========== ' """
 
 
 #sample points
@@ -252,11 +226,15 @@ plot_3 = ax_3.plot(
         color = 'red'
         )
 
-pp.show()
+pp.show() """
 
 
 
 ' ========== mirai dataset ========== '
+
+
+SAMPLE = False
+RATIO = 0.1
 
 
 # - load -
@@ -277,6 +255,11 @@ orderless = [
         ]
 df.drop(orderless, axis = 'columns', inplace = True)
 data = df.to_numpy(dtype = 'float64')
+
+if SAMPLE:
+    index = np.arange(data.shape[0])
+    index = np.random.choice(index, size = int(index.shape[0] * RATIO), replace = False)
+    data = data[index]
 
 
 # - aligned -
@@ -312,3 +295,12 @@ mad_mad = mad(mad_aligned, axis = 0)
 # - estimation -
 
 estimator = BareEstimator()
+width = 10000
+
+# How could the alignment with respect to standard deviation more stable than median absolute deviation?
+std_dim = estimator(std_aligned, width, exact = True)
+mad_dim = estimator(mad_aligned, width, exact = True)
+
+print('  >> width = {} <<'.format(width))
+print('estimated (std-aligned): {}'.format(std_dim))
+print('estimated (MAD-aligned): {}'.format(mad_dim))
