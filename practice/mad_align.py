@@ -37,6 +37,8 @@ def median(X):
     return result.x
 
 
+# This function is continuous but not positive-semidefinite.
+# According to Mercer's theorem, only matrix constructed by continuous PSD function retain the information under diagonalization.
 def dispersion(X):
     if type(X) != np.ndarray:
         raise TypeError('Input must be a \'numpy.ndarray\'.')
@@ -298,7 +300,6 @@ estimator = BareEstimator()
 width = 10000
 
 # How can the alignment with respect to standard deviation more stable than median absolute deviation?
-# The dispersion matrix not being positive-semidefinite seems somewhat related to this problem.
 std_dim = estimator(std_aligned, width, exact = True)
 mad_dim = estimator(mad_aligned, width, exact = True)
 
