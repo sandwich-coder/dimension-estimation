@@ -40,6 +40,7 @@ def median(X):
 # This function is continuous but not positive-semidefinite.
 # According to Mercer's theorem, only matrix constructed by continuous PSD function retains the information under diagonalization.
 # The PCA is one notable example of such functions.
+# Yet, diagonalization of this matrix still seems to "align".
 def dispersion(X):
     if type(X) != np.ndarray:
         raise TypeError('Input must be a \'numpy.ndarray\'.')
