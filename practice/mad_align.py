@@ -302,6 +302,8 @@ estimator = BareEstimator()
 width = 10000
 
 # How can the alignment with respect to standard deviation more stable than median absolute deviation?
+# It seems the points are not aligned properly, because it is not continuous-PSD.
+# The 2-dimensional test above is just a lucky case where all the eigenvalues are semipositive.
 std_dim = estimator(std_aligned, width, exact = True)
 mad_dim = estimator(mad_aligned, width, exact = True)
 
