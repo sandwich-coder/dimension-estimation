@@ -144,7 +144,7 @@ plot_2 = ax_2.plot(
 roll = make_swiss_roll(n_samples = 1000)[0]
 
 #mirai
-mirai = pd.read_csv('ids/datasets/mirai.csv')
+mirai = pd.read_csv('../datasets/mirai.csv')
 mirai = mirai[mirai['attack_flag'] == 0]
 orderless = [
     'src_ip_addr',
@@ -164,7 +164,7 @@ mirai = mirai.to_numpy(dtype = 'float64')
 #digits
 
 digit = images.MNIST(
-    root = 'datasets',
+    root = '../datasets',
     train = True,
     transform = ToTensor(),
     download = True
