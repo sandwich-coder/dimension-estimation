@@ -208,17 +208,17 @@ batch_count = 1000
 divisions = 10
 
 #select
-input = mad_aligned
+input_ = mad_aligned
 
 """
 range_ = np.max(
-    input.max(axis = 0) - input.min(axis = 0),
+    input_.max(axis = 0) - input_.min(axis = 0),
     axis = 0)
 width = range_ / np.float64(divisions)
 """
-width = mad_mad[0] * 0.4
+width = np.float64(350)
 
-tile = input / width
+tile = input_ / width
 tile = tile.round().astype('int64')
 tile = np.unique(tile, axis = 0)
 
