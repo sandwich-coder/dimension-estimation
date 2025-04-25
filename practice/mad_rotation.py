@@ -69,7 +69,7 @@ def mad_align(X):
 
 
 
-' ========== 2-dimensional test ========== '
+' ========== 2-dimensional test ========== ''''
 
 
 x1 = np.arange(10, dtype = 'float64')
@@ -120,11 +120,11 @@ plot_2 = ax_2.plot(
     marker = 'o', markersize = 3,
     linestyle = '',
     color = 'red'
-    )
+    )'''
 
 
 
-' ========== datasets ========== ''''
+' ========== datasets ========== '
 
 
 #swiss-roll
@@ -195,7 +195,7 @@ batch_count = 1000
 divisions = 10
 
 #select
-input_ = mad_aligned
+input_ = pca_aligned
 
 """
 range_ = np.max(
@@ -227,4 +227,4 @@ adjacency = np.concatenate(adjacency, axis = 0)
 
 dimension = np.log(adjacency.mean(axis = 0) + 1, dtype = 'float64') / np.log(3, dtype = 'float64')
 print('\n')
-print('dimension: {}'.format(dimension))'''
+print('dimension: {}'.format(dimension))
