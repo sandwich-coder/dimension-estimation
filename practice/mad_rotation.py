@@ -1,5 +1,6 @@
 from copy import deepcopy as copy
 import os, sys
+import time
 import types
 import logging
 import numpy as np
@@ -10,15 +11,6 @@ from scipy.optimize import minimize
 from scipy.stats import median_abs_deviation as mad1d
 import matplotlib as mpl
 from matplotlib import pyplot as pp
-mpl.rcParams['figure.figsize'] = (10, 10)
-mpl.rcParams['axes.titlesize'] = 'xx-small'
-mpl.rcParams['axes.labelsize'] = 'xx-small'
-mpl.rcParams['xtick.labelsize'] = 'xx-small'
-mpl.rcParams['ytick.labelsize'] = 'xx-small'
-mpl.rcParams['legend.fontsize'] = 'xx-small'
-mpl.rcParams['lines.markersize'] = 1
-mpl.rcParams['lines.linewidth'] = 0.5
-import time
 
 import pandas as pd
 from sklearn.decomposition import PCA
@@ -62,7 +54,6 @@ def mad_align(X):
     
     center = median(X)
     
-    #axiswise MAD
     mad = np.median(np.absolute(
         X - center.reshape([1, center.shape[0]])
         ), axis = 0)
@@ -78,7 +69,7 @@ def mad_align(X):
 
 
 
-' ========== 2-dimensional test ========== ' """
+' ========== 2-dimensional test ========== '
 
 
 x1 = np.arange(10, dtype = 'float64')
@@ -103,19 +94,17 @@ mad_aligned = mad_align(data)
 
 fig = pp.figure(layout = 'constrained', figsize = (12, 5))
 fig.suptitle('Comparison')
-gs = fig.add_gridspec(nrows = 1, ncols = 2, hspace = 0.2)
+gs = fig.add_gridspec(nrows = 1, ncols = 2, hspace = 0.1)
 
 ax_1 = fig.add_subplot(gs[1 - 1])
 ax_1.set_title('PCA')
 ax_1.set_box_aspect(1)
 ax_1.set_aspect('equal')
-ax_1.set_xlabel('x1')
-ax_1.set_ylabel('x2')
-pp.setp(ax_1.get_xticklabels(), rotation = 30, rotation_mode = 'anchor')
-pp.setp(ax_1.get_yticklabels(), rotation = 60, rotation_mode = 'anchor')
+ax_1.set_xlabel(r'$x_{1}$')
+ax_1.set_ylabel(r'$x_{2}$')
 plot_1 = ax_1.plot(
     pca_aligned[:, 0], pca_aligned[:, 1],
-    marker = 'o', markersize = 5,
+    marker = 'o', markersize = 3,
     linestyle = '',
     color = 'blue'
     )
@@ -124,20 +113,18 @@ ax_2 = fig.add_subplot(gs[2 - 1])
 ax_2.set_title('MAD')
 ax_2.set_box_aspect(1)
 ax_2.set_aspect('equal')
-ax_2.set_xlabel('x1')
-ax_2.set_ylabel('x2')
-pp.setp(ax_2.get_xticklabels(), rotation = 30, rotation_mode = 'anchor')
-pp.setp(ax_2.get_yticklabels(), rotation = 60, rotation_mode = 'anchor')
+ax_2.set_xlabel(r'$x_{1}$')
+ax_2.set_ylabel(r'$x_{2}$')
 plot_2 = ax_2.plot(
     mad_aligned[:, 0], mad_aligned[:, 1],
-    marker = 'o', markersize = 5,
+    marker = 'o', markersize = 3,
     linestyle = '',
     color = 'red'
-    ) """
+    )
 
 
 
-' ========== datasets ========== '
+' ========== datasets ========== ''''
 
 
 #swiss-roll
@@ -240,4 +227,4 @@ adjacency = np.concatenate(adjacency, axis = 0)
 
 dimension = np.log(adjacency.mean(axis = 0) + 1, dtype = 'float64') / np.log(3, dtype = 'float64')
 print('\n')
-print('dimension: {}'.format(dimension))
+print('dimension: {}'.format(dimension))'''
