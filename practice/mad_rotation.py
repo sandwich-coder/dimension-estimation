@@ -44,7 +44,7 @@ def median(X):
 # This method builds on the fact that
 # for continuous semipositive distribution,
 # its median squared equals the median of it squared.
-def mad_align(X):
+def mad_align(X, return_eigs = False):
     if type(X) != np.ndarray:
         raise TypeError('Input must be a \'numpy.ndarray\'.')
     if X.dtype != np.float64:
@@ -54,17 +54,21 @@ def mad_align(X):
     
     center = median(X)
     
+    # It is not sure whether the spatial median should be used for the axiswise median calculation as well as the coordinate rotation.
     mad = np.median(np.absolute(
         X - center.reshape([1, center.shape[0]])
         ), axis = 0)
     
     _ = mad.reshape([1, mad.shape[0]])
-    comad = _.transpose() @ _
+    comad = _.transpose() @ _    # Why is this not PSD?
     eig, eigmat = la.eigh(comad)
     
     centered = X - center.reshape([1, center.shape[0]])
     rotated = centered @ np.flip(eigmat, axis = 1)
-    return rotated
+    if return_eigs:
+        return rotated, eig, eigmat
+    else:
+        return rotated
     
 
 
@@ -173,7 +177,7 @@ pca = PCA(svd_solver = 'full')
 pca.fit(data)
 pca_aligned = pca.transform(data)
 
-mad_aligned = mad_align(data)
+mad_aligned, mad_eig, mad_eigmat = mad_align(data, return_eigs = True)
 
 
 #minmax
@@ -189,6 +193,7 @@ pca_mad = mad1d(pca_aligned, axis = 0)
 mad_mad = mad1d(mad_aligned, axis = 0)
 
 
+"""
 # - tile counting -
 
 batch_count = 1000
@@ -197,13 +202,10 @@ divisions = 10
 #select
 input_ = pca_aligned
 
-"""
 range_ = np.max(
     input_.max(axis = 0) - input_.min(axis = 0),
     axis = 0)
 width = range_ / np.float64(divisions)
-"""
-width = np.float64(350)
 
 tile = input_ / width
 tile = tile.round().astype('int64')
@@ -228,3 +230,4 @@ adjacency = np.concatenate(adjacency, axis = 0)
 dimension = np.log(adjacency.mean(axis = 0) + 1, dtype = 'float64') / np.log(3, dtype = 'float64')
 print('\n')
 print('dimension: {}'.format(dimension))
+"""
