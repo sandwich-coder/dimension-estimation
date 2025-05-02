@@ -38,38 +38,7 @@ def median(X):
     initial = X.mean(axis = 0, dtype = 'float64')
     result = minimize(func, initial, method = 'Nelder-Mead')
     
-    return result.x
-    
-
-# This method builds on the fact that
-# for continuous semipositive distribution,
-# its median squared equals the median of it squared.
-def mad_align(X, return_eigs = False):
-    if type(X) != np.ndarray:
-        raise TypeError('Input must be a \'numpy.ndarray\'.')
-    if X.dtype != np.float64:
-        X = X.astype('float64')
-    if X.ndim != 2:
-        raise ValueError('The shape must be the dataset standard.')
-    
-    center = median(X)
-    
-    # It is not sure whether the spatial median should be used for the axiswise median calculation as well as the coordinate rotation.
-    mad = np.median(np.absolute(
-        X - center.reshape([1, center.shape[0]])
-        ), axis = 0)
-    
-    _ = mad.reshape([1, mad.shape[0]])
-    comad = _.transpose() @ _    # Why is this not PSD?
-    eig, eigmat = la.eigh(comad)
-    
-    centered = X - center.reshape([1, center.shape[0]])
-    rotated = centered @ np.flip(eigmat, axis = 1)
-    if return_eigs:
-        return rotated, eig, eigmat
-    else:
-        return rotated
-    
+    return result.x    
 
 
 
@@ -162,6 +131,7 @@ digit = images.MNIST(
     ).data.numpy()
 digit = digit.reshape([digit.shape[0], -1])
 
+#truncated
 pca = PCA(n_components = 0.9, svd_solver = 'full')
 pca.fit(digit)
 digit = pca.transform(digit)
@@ -173,23 +143,32 @@ data = digit.copy()
 
 # - rotated -
 
+#pca
 pca = PCA(svd_solver = 'full')
 pca.fit(data)
 pca_aligned = pca.transform(data)
 
-mad_aligned, mad_eig, mad_eigmat = mad_align(data, return_eigs = True)
-
-
-#minmax
-pca_minmax = pca_aligned.max(axis = 0) - pca_aligned.min(axis = 0)
-mad_minmax = mad_aligned.max(axis = 0) - mad_aligned.min(axis = 0)
-
-#std
-pca_std = pca_aligned.std(axis = 0)
-mad_std = mad_aligned.std(axis = 0)
-
 #mad
+center = median(data)
+mad = mad1d(data, axis = 0)
+_ = mad.reshape([1, mad.shape[0]])
+comad = _.transpose() @ _    #PSD matrix with a little numerical unstability
+eig, eigmat = la.eigh(comad)
+centered = data - center.reshape([1, center.shape[0]])
+mad_aligned = centered @ np.flip(eigmat, axis = 1)
+
+
+#pca
+pca_minmax = pca_aligned.max(axis = 0) - pca_aligned.min(axis = 0)
+pca_std = pca_aligned.std(axis = 0, dtype = 'float64')
 pca_mad = mad1d(pca_aligned, axis = 0)
+
+# MAD in the rotated space doesn't match that in the original space diagonalized.
+# It seems not about the PSD, but rather equivariance.
+# This trial turned out to be a failure. There was a misunderstanding.
+#mad
+mad_minmax = mad_aligned.max(axis = 0) - mad_aligned.min(axis = 0)
+mad_std = mad_aligned.std(axis = 0, dtype = 'float64')
 mad_mad = mad1d(mad_aligned, axis = 0)
 
 
