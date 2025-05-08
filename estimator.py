@@ -3,8 +3,8 @@ import logging
 import numpy as np
 from scipy.spatial.distance import pdist, cdist
 
-from sklearn.decomposition import PCA
 from sklearn.ensemble import IsolationForest
+from sklearn.decomposition import PCA
 from tqdm import tqdm
 
 
