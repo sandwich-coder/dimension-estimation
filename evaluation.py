@@ -66,5 +66,5 @@ data = scaler.transform(data)
 
 
 estimator = DimensionEstimator()
-dimension = estimator(data, exact = True, truncate = True)
+dimension = estimator(data, exact = True, trim = True, truncate = True)
 print('dimension: {}'.format(dimension))
