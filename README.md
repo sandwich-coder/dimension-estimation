@@ -8,11 +8,6 @@ This is a high-dimensional extension of the previous work 'CubeDimAE'. The probl
 There were some revisions. First, the iterative scanning has been eliminated as it seemed redundant. It became a parameter 'divisions' instead, with the default 10. Second, the weighted averaging of adjacencies has been replaced by simple mean, on the basis that the sparsity of high-dimensional datasets makes the density meaningless.
 
 
-### Technical Challenge
-
-This algorithm relies on classical statistics, which believes real-world datasets generally behave as what the central limit theorem says, in how the axes are aligned. Albeit very successful, so many exceptions are encountered that "robust statistics", a major field of modern statistics, has emerged. To handle those exceptions and become a more reliable method of dimension estimation, many parts should switch from mean-std to the median-mad paradigm. To achieve such a rotation, the matrix must be constructed by a function that is continuous and positive-semidefinite to retain the information under diagonalization.
-
-
 ## Use
 
 #### tested environments
